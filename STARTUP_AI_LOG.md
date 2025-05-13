@@ -62,7 +62,7 @@ streamlit-modal>=0.1.2
 
 | Categoria         | Ferramenta           |
 |-------------------|----------------------|
-| 🧠 LLM             | OpenAI (GPT-4o)      |
+| 🧠 LLM             | OpenAI (gpt-4.1-nano)      |
 | 💬 Interface       | Streamlit            |
 | 📦 Empacotamento   | Docker (em preparação) |
 | 🧱 Base            | Template LangChain Quickstart |

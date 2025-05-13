@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  educamais-chatbot:
+    build: .
+    container_name: chatbot
+    ports:
+      - "8502:8501"  # 8501 é interno (Streamlit), 8502 é externo (VPS)
+    volumes:
+      - ./logs:/app/logs
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    restart: unless-stopped
