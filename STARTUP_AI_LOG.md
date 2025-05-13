@@ -81,4 +81,4 @@ streamlit-modal>=0.1.2
 
 ---
 
-*Documento mantido manualmente por Vinicius — atualizado em 13/05/2025*
+*Documento mantido manualmente por 92username — atualizado em 13/05/2025*

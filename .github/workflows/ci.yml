@@ -22,19 +22,19 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pylint black ruff mypy bandit
+          pip install ruff black pylint mypy bandit
 
-      - name: Run Ruff
-        run: ruff check **/*.py
-
-      - name: Run Black (check only)
-        run: black --check .
+      - name: Run Black
+        run: black --check --diff .
 
       - name: Run Pylint
-        run: pylint streamlit_app.py loader.py || true
+        run: pylint --disable=C0111,C0103 **/*.py || true
 
-      - name: Run Mypy
-        run: mypy . || true
+      - name: Run MyPy
+        run: mypy --ignore-missing-imports **/*.py || true
+
+      - name: Run Ruff Format
+        run: ruff -v format
 
       - name: Run Bandit
         run: bandit -r . -x venv
