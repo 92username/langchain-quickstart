@@ -1,4 +1,7 @@
-streamlit
+streamlit>=1.25.0
 openai
-langchain
+langchain-core>=0.1.30
+langchain-openai>=0.1.6
+python-dotenv>=1.0.0
 langchain-community
+streamlit-modal>=0.1.2
