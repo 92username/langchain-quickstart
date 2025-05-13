@@ -1,7 +1,9 @@
-
 name: CI - Code Quality and Security
 
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  workflow_dispatch:  # Permite execução manual através da interface do GitHub
 
 jobs:
   lint-and-checks:
@@ -23,7 +25,7 @@ jobs:
           pip install pylint black ruff mypy bandit
 
       - name: Run Ruff
-        run: ruff .
+        run: ruff check **/*.py
 
       - name: Run Black (check only)
         run: black --check .
