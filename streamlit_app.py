@@ -49,7 +49,7 @@ if not os.path.exists(csv_file):
 
 # Título e descrição do aplicativo
 st.title(
-    "Estudamais.tech - A startup que quer investir nais de  R$1.000.000,00 na sua carreira!"
+    "Estudamais.tech - A startup que quer investir mais de  R$1.000.000,00 na sua carreira!"
 )
 st.markdown(
     "<h3 style='text-align: center; font-size: 1.2em;'>Converse comigo para saber mais 👇</h3>",
