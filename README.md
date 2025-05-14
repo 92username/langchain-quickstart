@@ -1,11 +1,10 @@
-![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54) 
-![Streamlit](https://img.shields.io/badge/Streamlit-%23FE4B4B.svg?style=for-the-badge&logo=streamlit&logoColor=white) ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white) ![Nginx](https://img.shields.io/badge/nginx-%23009639.svg?style=for-the-badge&logo=nginx&logoColor=white) ![ChatGPT](https://img.shields.io/badge/chatGPT-74aa9c?style=for-the-badge&logo=openai&logoColor=white) ![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white) 
-
-![Docker Image Size](https://img.shields.io/docker/image-size/user92/langchain-quickstart/latest) ![Docker Pulls](https://img.shields.io/docker/pulls/user92/langchain-quickstart) 
-
 [![CI - Code Quality and Security](https://github.com/92username/langchain-quickstart/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/92username/langchain-quickstart/actions/workflows/ci.yml)
 [![CD - Deploy VPS](https://github.com/92username/langchain-quickstart/actions/workflows/deploy.yml/badge.svg?branch=main)](https://github.com/92username/langchain-quickstart/actions/workflows/deploy.yml) 
 
+![Docker Image Size](https://img.shields.io/docker/image-size/user92/langchain-quickstart/latest) ![Docker Pulls](https://img.shields.io/docker/pulls/user92/langchain-quickstart) 
+
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54) 
+![Streamlit](https://img.shields.io/badge/Streamlit-%23FE4B4B.svg?style=for-the-badge&logo=streamlit&logoColor=white) ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white) ![Nginx](https://img.shields.io/badge/nginx-%23009639.svg?style=for-the-badge&logo=nginx&logoColor=white) ![ChatGPT](https://img.shields.io/badge/chatGPT-74aa9c?style=for-the-badge&logo=openai&logoColor=white) ![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white) 
 ---
 
 # EstudaMais.tech
