@@ -60,14 +60,16 @@ st.markdown(
 openai_api_key = os.getenv("OPENAI_API_KEY")
 
 # Adicionando seção de links úteis no sidebar
-st.sidebar.markdown("""
+st.sidebar.markdown(
+    """
 ## 🧪 Este é um Closed Beta
 
 Este aplicativo está em fase de desenvolvimento.
 Se você está visualizando esta mensagem, é porque foi convidado(a) a testar e contribuir com a evolução da plataforma.
 
 A equipe da EstudaMais.tech agradece seu apoio e feedback!
-""")
+"""
+)
 st.sidebar.markdown("---")
 # Placeholders para links futuros
 st.sidebar.markdown("[🏢 Site da EstudaMais](https://estudamais.com)")
