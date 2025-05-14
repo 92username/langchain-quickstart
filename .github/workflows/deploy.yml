@@ -18,7 +18,7 @@ jobs:
       - name: Login no Docker Hub
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
-      - name: Build da imagem Docker
+      - name: Build da imagem Docker (clean build)
         run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/langchain-quickstart:latest .
 
       - name: Push da imagem para o Docker Hub
