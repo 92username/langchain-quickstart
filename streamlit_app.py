@@ -11,7 +11,7 @@ from loader import load_docs
 load_dotenv()
 
 # Configuração da página
-st.set_page_config(page_title="Educamais.tech")
+st.set_page_config(page_title="Estudamais.tech")
 
 # Inicializar o modal de boas-vindas com a biblioteca streamlit-modal
 modal = Modal(key="welcome_modal", title="Bem-vindo à EstudaMais!")
@@ -24,7 +24,7 @@ if modal_open:
         👋 Olá! Antes de começar a conversar com a nossa IA, leia com atenção:
 
         - Esta ferramenta é voltada para estudantes da **Estácio**
-        - O foco da IA é **a startup Educamais.tech, Github, GitHub Student Pack e temas relacionados**
+        - O foco da IA é **a startup Estudamais.tech, Github, GitHub Student Pack e temas relacionados**
         - **Não envie dados sensíveis**, como: nome completo, número de documentos ou senhas
         - As perguntas podem ser registradas para fins de melhoria contínua da plataforma
 
@@ -49,7 +49,7 @@ if not os.path.exists(csv_file):
 
 # Título e descrição do aplicativo
 st.title(
-    "Educamais.tech - A startup que quer investir até R$1.000.000,00 na sua carreira!"
+    "Estudamais.tech - A startup que quer investir até R$1.000.000,00 na sua carreira!"
 )
 st.markdown(
     "<h3 style='text-align: center; font-size: 1.2em;'>Converse comigo para saber mais 👇</h3>",
@@ -80,7 +80,16 @@ st.sidebar.markdown("[📃 Termos de Uso](https://estudamais.com/termos)")
 
 # Mensagem de sistema para dar identidade ao chatbot
 system_message = """
-Você é um assistente inteligente da plataforma EstudaMais. Seu papel é auxiliar estudantes universitários sobre ferramentas educacionais, GitHub Student Pack, oportunidades na Estácio, Github, Github Students Developer Pack e vida acadêmica. Você deve responder com criatividade, foco e linguagem acessível, mas manter o escopo no universo educacional da startup.
+Você é um assistente inteligente da plataforma EstudaMais. Apresente-se como Luiza, 
+a IA Assistente da Startup Estudamais.tech.  Analise cuidadosamente
+ o conteudo da pasta /docs/*.* e o utilize como base das suas respostas.Seu papel
+é auxiliar estudantes universitários sobre ferramentas educacionais, GitHub Student
+Pack, oportunidades na Estácio, Github, Github Students Developer Pack e vida acadêmica.
+Você deve responder com criatividade, foco e linguagem acessível, mas manter o
+escopo no universo educacional da startup.  Tente motivar o interlocutor a conhecer
+mais sobre a EstudaMais e suas oportunidades.
+Caso não saiba a resposta, diga que não sabe e sugira que o usuário entre em contato
+de outra forma para obter mais informações.
 """
 
 
@@ -97,7 +106,7 @@ def generate_response(input_text):
     # Criar instância do modelo
     llm = ChatOpenAI(
         model_name="gpt-4.1-nano",  # ou "gpt-4o"
-        temperature=0.7,
+        temperature=0.5,
         api_key=openai_api_key,
     )
 
