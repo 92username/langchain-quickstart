@@ -8,6 +8,8 @@ services:
       - "8502:8501"  # 8501 é interno (Streamlit), 8502 é externo (VPS)
     volumes:
       - ./logs:/app/logs
+      - ./logs/errors:/app/logs/errors
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ENVIRONMENT=production
     restart: always

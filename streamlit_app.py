@@ -19,12 +19,17 @@ from dotenv import load_dotenv
 
 # Import the retriever function instead of the loader
 from retriever import load_docs
+# Import the custom logger
+from logger import logger, error, info, warning
 
 # Load environment variables
 load_dotenv()
 
 # Configuração da página
 st.set_page_config(page_title="Estudamais.tech")
+
+# Logging application start
+info("Aplicação Estudamais.tech iniciada")
 
 # Inicializar o modal de boas-vindas com a biblioteca streamlit-modal
 modal = Modal(key="welcome_modal", title="Bem-vindo à EstudaMais!")
@@ -53,6 +58,7 @@ if modal_open:
 logs_dir = "logs"
 if not os.path.exists(logs_dir):
     os.makedirs(logs_dir)
+    info(f"Diretório de logs criado: {logs_dir}")
 
 # Verificar se o arquivo CSV existe, caso contrário criar com cabeçalho
 csv_file = os.path.join(logs_dir, "conversas.csv")
@@ -60,6 +66,7 @@ if not os.path.exists(csv_file):
     with open(csv_file, mode="w", encoding="utf-8", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(["timestamp", "pergunta", "resposta"])
+    info(f"Arquivo de conversas criado: {csv_file}")
 
 # Título e descrição do aplicativo
 st.title(
@@ -72,6 +79,8 @@ st.markdown(
 
 # Carregando a API key do ambiente ao invés de solicitar do usuário
 openai_api_key = os.getenv("OPENAI_API_KEY")
+if not openai_api_key:
+    warning("OPENAI_API_KEY não encontrada no ambiente")
 
 # Adicionando seção de links úteis no sidebar
 st.sidebar.markdown(
@@ -87,7 +96,7 @@ A equipe da EstudaMais.tech agradece seu apoio e feedback!
 st.sidebar.markdown("---")
 # Placeholders para links futuros
 st.sidebar.markdown("[🏢 Site da EstudaMais](https://estudamais.com)")
-st.sidebar.markdown("[💻 GitHub da EstudaMais](https://github.com/estudamais)")
+st.sidebar.markdown("[💻 GitHub da EstudaMais](https://github.com/92username/langchain-quickstart)")
 st.sidebar.markdown("[📱 Contato via WhatsApp](https://wa.me/seunumero)")
 st.sidebar.markdown("[❓ Perguntas Frequentes (FAQ)](https://estudamais.com/faq)")
 st.sidebar.markdown("[📃 Termos de Uso](https://estudamais.com/termos)")
@@ -135,38 +144,51 @@ def generate_response(input_text):
     """
     # Check for API key
     if not openai_api_key:
+        error("Tentativa de gerar resposta sem API key configurada")
         st.error("OpenAI API key is required!")
         return
+    
+    # Log the query received
+    info(f"Pergunta recebida: {input_text[:50]}...")
         
     # Get relevant documents from ChromaDB using the retriever
     try:
-        retrieved_docs = load_docs(input_text, k=5)
-        
-        if not retrieved_docs:
-            st.warning("No relevant documents found in the knowledge base.")
-            context = "No specific context available."
-        else:
-            # Create a concatenated context from the retrieved documents
-            context = "\n\n".join([doc.page_content for doc in retrieved_docs])
+        with st.spinner("Luiza está pensando..."):
+            # Log retrieval attempt
+            info("Buscando documentos relevantes na base de conhecimento...")
             
-        # Initialize the LLM
-        llm = ChatOpenAI(
-            model_name="gpt-4.1-nano",  # or "gpt-4o"
-            temperature=0.5,
-            api_key=openai_api_key,
-        )
+            retrieved_docs = load_docs(input_text, k=5)
             
-        # Create messages with system context and user input
-        messages = [
-            {"role": "system", "content": system_message + "\n\n" + context},
-            {"role": "user", "content": input_text},
-        ]
+            if not retrieved_docs:
+                warning("Nenhum documento relevante encontrado para a consulta")
+                st.warning("No relevant documents found in the knowledge base.")
+                context = "No specific context available."
+            else:
+                # Create a concatenated context from the retrieved documents
+                context = "\n\n".join([doc.page_content for doc in retrieved_docs])
+                info(f"Encontrados {len(retrieved_docs)} documentos relevantes")
+                
+            # Initialize the LLM
+            info("Inicializando modelo de linguagem...")
+            llm = ChatOpenAI(
+                model_name="gpt-4.1-nano",  # or "gpt-4o"
+                temperature=0.5,
+                api_key=openai_api_key,
+            )
+                
+            # Create messages with system context and user input
+            messages = [
+                {"role": "system", "content": system_message + "\n\n" + context},
+                {"role": "user", "content": input_text},
+            ]
+            
+            # Generate response
+            info("Gerando resposta com o modelo...")
+            response = llm.invoke(messages)
+            response_content = response.content
+            info("Resposta gerada com sucesso")
         
-        # Generate response
-        response = llm.invoke(messages)
-        response_content = response.content
-        
-        # Display the response
+        # Display the response (outside the spinner context)
         st.info(response_content)
         
         # Show sources in an expander if we have retrieved documents
@@ -181,22 +203,35 @@ def generate_response(input_text):
                     st.markdown("---")
         
         # Log the conversation
-        with open(csv_file, mode="a", encoding="utf-8", newline="") as log_file:
-            log_writer = csv.writer(log_file)
-            log_writer.writerow([datetime.now(), input_text, response_content])
+        try:
+            with open(csv_file, mode="a", encoding="utf-8", newline="") as log_file:
+                log_writer = csv.writer(log_file)
+                log_writer.writerow([datetime.now(), input_text, response_content])
+                info("Conversa registrada no arquivo CSV")
+        except IOError as e:
+            error(f"Erro ao registrar conversa no arquivo CSV: {e}", exc_info=True)
             
     except Exception as e:
-        st.error(f"Erro ao gerar resposta: {str(e)}")
-        import traceback
-        st.error(traceback.format_exc())
+        error_message = f"Erro ao gerar resposta: {str(e)}"
+        error(error_message, exc_info=True)
+        
+        # Provide a user-friendly error message
+        st.error("Desculpe, ocorreu um erro interno. Nossa equipe foi notificada e está trabalhando para resolver o problema.")
+        
+        # For development environment, you can show more details
+        if os.getenv("ENVIRONMENT") == "development":
+            import traceback
+            st.error(traceback.format_exc())
 
 
 with st.form("my_form"):
-    text = st.text_area("Digite aqui:", "Quero saber mais sobre a Estudamais.tech")
+    text = st.text_area("Digite aqui:", "Quero saber mais sobre a Startup Estudamais.tech!")
     submitted = st.form_submit_button("Enviar")
     if not openai_api_key or not openai_api_key.startswith("sk-"):
         st.warning(
             "Chave da API OpenAI não encontrada. Verifique o arquivo .env!", icon="⚠"
         )
+        warning("API Key OpenAI ausente ou em formato inválido")
     elif submitted:
+        info(f"Formulário enviado com a pergunta: {text[:50]}...")
         generate_response(text)
