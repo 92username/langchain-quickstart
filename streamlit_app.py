@@ -225,7 +225,7 @@ def generate_response(input_text):
 
 
 with st.form("my_form"):
-    text = st.text_area("Digite aqui:", "Quero saber mais sobre a Startup Estudamais.tech!")
+    text = st.text_area("Digite aqui:", "Qual o objetivo da Startup Estudamais.tech?")
     submitted = st.form_submit_button("Enviar")
     if not openai_api_key or not openai_api_key.startswith("sk-"):
         st.warning(
