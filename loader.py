@@ -1,3 +1,9 @@
+"""
+Document loader module for the LangChain RAG project.
+
+This module provides functionality to load and concatenate
+markdown files from the docs directory.
+"""
 import os
 
 
@@ -25,7 +31,8 @@ def load_docs():
             try:
                 with open(file_path, "r", encoding="utf-8") as f:
                     combined += f.read() + "\n\n"
-            except Exception as e:
+            except (IOError, OSError, UnicodeDecodeError) as e:
+                # Specific exceptions instead of catching generic Exception
                 print(f"Erro ao ler o arquivo {filename}: {e}")
 
     return combined
