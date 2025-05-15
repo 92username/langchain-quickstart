@@ -27,10 +27,7 @@ os.makedirs(LOG_DIR, exist_ok=True)
 
 # Create file handler with rotation (10MB max size, keep 5 backup logs)
 file_handler = RotatingFileHandler(
-    LOG_FILE, 
-    maxBytes=10_000_000, 
-    backupCount=5,
-    encoding="utf-8"
+    LOG_FILE, maxBytes=10_000_000, backupCount=5, encoding="utf-8"
 )
 file_handler.setLevel(logging.INFO)
 file_handler.setFormatter(logging.Formatter(LOG_FORMAT, DATE_FORMAT))
@@ -49,14 +46,16 @@ def info(message):
     """Log an info level message"""
     logger.info(message)
 
+
 def warning(message):
     """Log a warning level message"""
     logger.warning(message)
 
+
 def error(message, exc_info=False):
     """
     Log an error level message, optionally with exception info
-    
+
     Args:
         message: The error message
         exc_info: If True, include exception traceback information

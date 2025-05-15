@@ -15,6 +15,7 @@ try:
 except ImportError:
     # Fallback to basic logging if logger module is not available
     import logging
+
     logger = logging.getLogger(__name__)
     info = logger.info
     warning = logger.warning
@@ -53,7 +54,7 @@ def load_docs(query: str, k: int = 5) -> List[Document]:
         >>>     print(doc.page_content)
     """
     info(f"Buscando documentos para a query: '{query[:50]}...' (k={k})")
-    
+
     try:
         # Check if OPENAI_API_KEY is set
         if not os.getenv("OPENAI_API_KEY"):
@@ -87,7 +88,7 @@ def load_docs(query: str, k: int = 5) -> List[Document]:
 
         info(f"Busca concluída. Encontrados {len(docs)} documentos relevantes.")
         return docs
-    
+
     except Exception as e:
         error(f"Erro ao recuperar documentos do ChromaDB: {str(e)}", exc_info=True)
         # Re-raise exception for appropriate handling by caller

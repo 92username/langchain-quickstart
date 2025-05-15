@@ -19,14 +19,95 @@ from dotenv import load_dotenv
 
 # Import the retriever function instead of the loader
 from retriever import load_docs
+
 # Import the custom logger
 from logger import logger, error, info, warning
 
 # Load environment variables
 load_dotenv()
 
-# Configuração da página
+# Configuração da página - DEVE SER O PRIMEIRO COMANDO ST
 st.set_page_config(page_title="Estudamais.tech")
+
+# Apply custom CSS with gradient background and improved typography
+st.markdown(
+    """
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    
+    html, body, [class*="css"] {
+        font-family: 'Poppins', sans-serif;
+    }
+    
+    .main {
+        background: linear-gradient(135deg, #1c4145, #457a8e);
+        color: #f8f8f8;
+    }
+    
+    h1, h2, h3 {
+        color: #e5e5e5;
+    }
+    
+    .stButton button {
+        background-color: #1e88e5;
+        color: white;
+        border-radius: 5px;
+        border: none;
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+    }
+    
+    .stButton button:hover {
+        background-color: #0d47a1;
+    }
+    
+    .stChat {
+        border-radius: 10px;
+    }
+    
+    .stChatMessage {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 10px;
+        margin-bottom: 5px;
+    }
+    
+    .stChatInputContainer {
+        background-color: rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        padding: 5px;
+    }
+    
+    a {
+        color: #64b5f6;
+    }
+    
+    a:hover {
+        color: #bbdefb;
+    }
+    
+    /* Estilos para o sidebar */
+    .css-1d391kg, .css-1wrcr25, .css-ocqkz7 {  /* Classes do sidebar no Streamlit */
+        background-color: #1c4145 !important;
+    }
+    
+    .css-pkbazv {  /* Classe para links do sidebar */
+        color: #64b5f6 !important;
+    }
+    
+    .css-pkbazv:hover {
+        color: #bbdefb !important;
+    }
+    
+    /* Se você quiser um gradiente no sidebar similar ao fundo principal */
+    [data-testid="stSidebar"] {
+        background: linear-gradient(175deg, #1c4145, #2a606a) !important;
+        color: #f8f8f8 !important;
+    }
+</style>
+""",
+    unsafe_allow_html=True,
+)
 
 # Logging application start
 info("Aplicação Estudamais.tech iniciada")
@@ -100,7 +181,9 @@ A equipe da EstudaMais.tech agradece seu apoio e feedback!
 st.sidebar.markdown("---")
 # Placeholders para links futuros
 st.sidebar.markdown("[🏢 Site da EstudaMais](https://estudamais.com)")
-st.sidebar.markdown("[💻 GitHub da EstudaMais](https://github.com/92username/langchain-quickstart)")
+st.sidebar.markdown(
+    "[💻 GitHub da EstudaMais](https://github.com/92username/langchain-quickstart)"
+)
 st.sidebar.markdown("[📱 Contato via WhatsApp](https://wa.me/seunumero)")
 st.sidebar.markdown("[❓ Perguntas Frequentes (FAQ)](https://estudamais.com/faq)")
 st.sidebar.markdown("[📃 Termos de Uso](https://estudamais.com/termos)")
@@ -140,15 +223,15 @@ Nunca invente dados numéricos.
 def generate_response(input_text):
     """
     Generate a response using RAG (Retrieval-Augmented Generation) based on user input.
-    
+
     This function:
     1. Retrieves relevant document chunks from ChromaDB based on the query
     2. Uses these documents as context for the LLM
     3. Displays both the response and source documents used
-    
+
     Args:
         input_text (str): The user's query text
-    
+
     Returns:
         str: The generated response text
     """
@@ -157,18 +240,18 @@ def generate_response(input_text):
         error("Tentativa de gerar resposta sem API key configurada")
         st.error("OpenAI API key is required!")
         return None
-    
+
     # Log the query received
     info(f"Pergunta recebida: {input_text[:50]}...")
-        
+
     # Get relevant documents from ChromaDB using the retriever
     try:
         with st.spinner("Luiza está pensando..."):
             # Log retrieval attempt
             info("Buscando documentos relevantes na base de conhecimento...")
-            
+
             retrieved_docs = load_docs(input_text, k=5)
-            
+
             if not retrieved_docs:
                 warning("Nenhum documento relevante encontrado para a consulta")
                 context = "No specific context available."
@@ -176,7 +259,7 @@ def generate_response(input_text):
                 # Create a concatenated context from the retrieved documents
                 context = "\n\n".join([doc.page_content for doc in retrieved_docs])
                 info(f"Encontrados {len(retrieved_docs)} documentos relevantes")
-                
+
             # Initialize the LLM
             info("Inicializando modelo de linguagem...")
             llm = ChatOpenAI(
@@ -185,30 +268,30 @@ def generate_response(input_text):
                 max_tokens=700,
                 api_key=openai_api_key,
             )
-                
+
             # Create messages with system context and user input
             messages = [
                 {"role": "system", "content": system_message + "\n\n" + context},
                 {"role": "user", "content": input_text},
             ]
-            
+
             # Generate response
             info("Gerando resposta com o modelo...")
             response = llm.invoke(messages)
             response_content = response.content
             info("Resposta gerada com sucesso")
-        
+
         # Show sources in an expander if we have retrieved documents
         if retrieved_docs:
             with st.expander("📚 Fontes utilizadas"):
                 for i, doc in enumerate(retrieved_docs):
                     st.markdown(f"**Fonte {i+1}:**")
                     st.markdown(f"```\n{doc.page_content}\n```")
-                    if hasattr(doc, 'metadata') and doc.metadata:
-                        source = doc.metadata.get('source', 'Desconhecida')
+                    if hasattr(doc, "metadata") and doc.metadata:
+                        source = doc.metadata.get("source", "Desconhecida")
                         st.caption(f"Fonte: {source}")
                     st.markdown("---")
-        
+
         # Log the conversation
         try:
             with open(csv_file, mode="a", encoding="utf-8", newline="") as log_file:
@@ -217,21 +300,24 @@ def generate_response(input_text):
                 info("Conversa registrada no arquivo CSV")
         except IOError as e:
             error(f"Erro ao registrar conversa no arquivo CSV: {e}", exc_info=True)
-        
+
         return response_content
-            
+
     except Exception as e:
         error_message = f"Erro ao gerar resposta: {str(e)}"
         error(error_message, exc_info=True)
-        
+
         # Provide a user-friendly error message
-        st.error("Desculpe, ocorreu um erro interno. Nossa equipe foi notificada e está trabalhando para resolver o problema.")
-        
+        st.error(
+            "Desculpe, ocorreu um erro interno. Nossa equipe foi notificada e está trabalhando para resolver o problema."
+        )
+
         # For development environment, you can show more details
         if os.getenv("ENVIRONMENT") == "development":
             import traceback
+
             st.error(traceback.format_exc())
-        
+
         return None
 
 
@@ -245,7 +331,9 @@ if not openai_api_key or not openai_api_key.startswith("sk-"):
 # Display welcome message if chat history is empty
 if not st.session_state.chat_history:
     with st.chat_message("assistant"):
-        st.markdown("Olá! Sou a Luiza, assistente virtual da EstudaMais.tech. Como posso ajudar você hoje?")
+        st.markdown(
+            "Olá! Sou a Luiza, assistente virtual da EstudaMais.tech. Como posso ajudar você hoje?"
+        )
 
 # Display chat history
 for message in st.session_state.chat_history:
@@ -260,10 +348,10 @@ if user_input:
     st.session_state.chat_history.append({"role": "user", "content": user_input})
     with st.chat_message("user"):
         st.markdown(user_input)
-    
+
     # Generate response
     response = generate_response(user_input)
-    
+
     if response:
         # Add assistant response to chat history and display it
         st.session_state.chat_history.append({"role": "assistant", "content": response})

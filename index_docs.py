@@ -21,6 +21,7 @@ try:
 except ImportError:
     # Fallback to basic logging if logger module is not available
     import logging
+
     logger = logging.getLogger(__name__)
     info = logger.info
     warning = logger.warning
@@ -95,7 +96,7 @@ def index_markdown_files():
         vectordb.persist()
 
         info(f"Base indexada com sucesso! Armazenada em {chroma_dir}")
-    
+
     except Exception as e:
         error(f"Erro durante a indexação: {str(e)}", exc_info=True)
         raise
