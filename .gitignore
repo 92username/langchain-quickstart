@@ -10,6 +10,7 @@ __pycache__/
 # Data and logs
 logs/
 chroma_index/
+logs/errors/error.log
 
 # Local scripts and config
 pull_csv.sh
