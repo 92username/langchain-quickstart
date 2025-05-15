@@ -1,8 +1,8 @@
-# ✅ REQUISITOS DO CHATBOT — Projeto EducaMais.tech
+# ✅ REQUISITOS DO CHATBOT — Projeto Estudamais.tech
 
 ## 🎯 Objetivo
 
-Este chatbot tem como objetivo **apoiar o desenvolvimento da startup EducaMais.tech** ao fornecer respostas inteligentes e contextualizadas com base na documentação interna do projeto.
+Este chatbot tem como objetivo **apoiar o desenvolvimento da startup EstudaMais.tech** ao fornecer respostas inteligentes e contextualizadas com base na documentação interna do projeto.
 
 Ele será utilizado para:
 
@@ -44,13 +44,13 @@ Ele será utilizado para:
 
 - [ ] **RNF01**: O sistema deve ser hospedado preferencialmente na AWS ou Azure.
 - [x] **RNF02**: A VPS da Hostinger pode ser usada como backup do projeto.
-- [x] **RNF03**: O domínio próprio utilizado será `educamais.tech`.
+- [x] **RNF03**: O domínio próprio utilizado será `estudamais.tech`.
 - [x] **RNF04**: Deve ser possível realizar deploy via CI/CD (GitHub Actions ou alternativa).
-- [ ] **RNF05**: A base de conhecimento deve estar organizada e versionada no GitHub.
+- [ ] **RNF05**: A base de conhecimento deve estar organizada e versionada no GitHub.⚠️ (*em andamento*)
 - [ ] **RNF06**: O tempo médio de resposta do chatbot **não deve exceder 5 segundos** (⚠️ *ainda não avaliado*).
-- [x] **RNF07**: O backend deve ser implementado em Python (Reflex) com integração ao LLM via API.
+- [ ] **RNF07**: O backend deve ser implementado em Python (Reflex) com integração ao LLM via API.
 - [ ] **RNF08**: O sistema deve evitar conflitos de contexto quando múltiplos usuários estiverem utilizando o chatbot simultaneamente. *(Importante verificar se há isolamento de sessão adequado no backend da LLM)*.
-- [ ] **RNF09**: Deve haver logs básicos de uso para fins de melhoria contínua (sem violar privacidade).
+- [x] **RNF09**: Deve haver logs básicos de uso para fins de melhoria contínua (sem violar privacidade).
 - [ ] **RNF10**: O projeto deve utilizar preferencialmente tecnologias gratuitas ou com benefício educacional do GitHub Student Pack.
 
 ---
