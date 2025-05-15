@@ -1,7 +1,16 @@
+# Virtual environment
 venv/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment variables
 .env
-logs/conversas.csv
-# script to pull csv from vps.  locally only due to security
-pull_csv.sh
+
+# Data and logs
+logs/
 chroma_index/
-logs/errors/error.log
+
+# Local scripts and config
+pull_csv.sh
+.DS_Store
