@@ -1,0 +1,4 @@
+- Validar a proposta com alunos da Estácio (EAD e presencial).
+- Demonstrar a jornada completa usando o GHSP: domínio, hospedagem, automação e deploy.
+- Utilizar preferencialmente ferramentas gratuitas, ou presentes no GHSP para o MVP.
+- Oferecer suporte técnico e educacional via IA (Luiza).

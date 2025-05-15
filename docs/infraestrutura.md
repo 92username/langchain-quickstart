@@ -1,0 +1,4 @@
+- **Domínio:** `.me`, `.tech`, `.codes`, etc., via Namecheap com GHSP.
+- **Hospedagem:** GitHub Pages, AWS ou Azure (Docker + Nginx).
+- **CI/CD:** GitHub Actions.
+- **Ferramentas:** Codespaces, JetBrains, Notion, GitHub Copilot, Docker, Azure, GCP.
