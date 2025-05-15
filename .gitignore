@@ -4,3 +4,4 @@ logs/conversas.csv
 # script to pull csv from vps.  locally only due to security
 pull_csv.sh
 chroma_index/
+logs/errors/error.log
