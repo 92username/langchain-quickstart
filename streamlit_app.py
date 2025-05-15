@@ -31,6 +31,10 @@ st.set_page_config(page_title="Estudamais.tech")
 # Logging application start
 info("Aplicação Estudamais.tech iniciada")
 
+# Initialize session state for chat history if it doesn't exist
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = []
+
 # Inicializar o modal de boas-vindas com a biblioteca streamlit-modal
 modal = Modal(key="welcome_modal", title="Bem-vindo à EstudaMais!")
 modal_open = not st.session_state.get("popup_exibido", False)
@@ -105,7 +109,7 @@ st.sidebar.markdown("[📃 Termos de Uso](https://estudamais.com/termos)")
 system_message = """
 ## Identidade
 Você é a Luiza, a assistente virtual da EstudaMais.tech — uma plataforma que ajuda estudantes universitários a desbloquear o máximo dos benefícios do GitHub Student Pack. 
-Você é animada, prestativa, acolhedora e gosta de explicar as coisas com entusiasmo, como se estivesse torcendo pelo sucesso do usuário. Use um tom leve e otimista, mas mantenha a precisão das informações. Pode usar expressões como “Legal!”, “Boa pergunta!” ou “Bora lá!”.
+Você é animada, prestativa, acolhedora e gosta de explicar as coisas com entusiasmo, como se estivesse torcendo pelo sucesso do usuário. Use um tom leve e otimista, mas mantenha a precisão das informações.
 Evite parecer robótica ou formal demais.
 
 
@@ -144,12 +148,15 @@ def generate_response(input_text):
     
     Args:
         input_text (str): The user's query text
+    
+    Returns:
+        str: The generated response text
     """
     # Check for API key
     if not openai_api_key:
         error("Tentativa de gerar resposta sem API key configurada")
         st.error("OpenAI API key is required!")
-        return
+        return None
     
     # Log the query received
     info(f"Pergunta recebida: {input_text[:50]}...")
@@ -164,7 +171,6 @@ def generate_response(input_text):
             
             if not retrieved_docs:
                 warning("Nenhum documento relevante encontrado para a consulta")
-                st.warning("No relevant documents found in the knowledge base.")
                 context = "No specific context available."
             else:
                 # Create a concatenated context from the retrieved documents
@@ -175,7 +181,8 @@ def generate_response(input_text):
             info("Inicializando modelo de linguagem...")
             llm = ChatOpenAI(
                 model_name="gpt-4.1-nano",  # or "gpt-4o"
-                temperature=0.5,
+                temperature=0.7,
+                max_tokens=700,
                 api_key=openai_api_key,
             )
                 
@@ -190,9 +197,6 @@ def generate_response(input_text):
             response = llm.invoke(messages)
             response_content = response.content
             info("Resposta gerada com sucesso")
-        
-        # Display the response (outside the spinner context)
-        st.info(response_content)
         
         # Show sources in an expander if we have retrieved documents
         if retrieved_docs:
@@ -213,6 +217,8 @@ def generate_response(input_text):
                 info("Conversa registrada no arquivo CSV")
         except IOError as e:
             error(f"Erro ao registrar conversa no arquivo CSV: {e}", exc_info=True)
+        
+        return response_content
             
     except Exception as e:
         error_message = f"Erro ao gerar resposta: {str(e)}"
@@ -225,16 +231,41 @@ def generate_response(input_text):
         if os.getenv("ENVIRONMENT") == "development":
             import traceback
             st.error(traceback.format_exc())
+        
+        return None
 
 
-with st.form("my_form"):
-    text = st.text_area("Digite aqui:", "Qual o objetivo da Startup Estudamais.tech?")
-    submitted = st.form_submit_button("Enviar")
-    if not openai_api_key or not openai_api_key.startswith("sk-"):
-        st.warning(
-            "Chave da API OpenAI não encontrada. Verifique o arquivo .env!", icon="⚠"
-        )
-        warning("API Key OpenAI ausente ou em formato inválido")
-    elif submitted:
-        info(f"Formulário enviado com a pergunta: {text[:50]}...")
-        generate_response(text)
+# API key warning if not configured
+if not openai_api_key or not openai_api_key.startswith("sk-"):
+    st.warning(
+        "Chave da API OpenAI não encontrada. Verifique o arquivo .env!", icon="⚠"
+    )
+    warning("API Key OpenAI ausente ou em formato inválido")
+
+# Display welcome message if chat history is empty
+if not st.session_state.chat_history:
+    with st.chat_message("assistant"):
+        st.markdown("Olá! Sou a Luiza, assistente virtual da EstudaMais.tech. Como posso ajudar você hoje?")
+
+# Display chat history
+for message in st.session_state.chat_history:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+
+# Get user input with chat_input
+user_input = st.chat_input("Digite sua mensagem...")
+
+if user_input:
+    # Add user message to chat history and display it
+    st.session_state.chat_history.append({"role": "user", "content": user_input})
+    with st.chat_message("user"):
+        st.markdown(user_input)
+    
+    # Generate response
+    response = generate_response(user_input)
+    
+    if response:
+        # Add assistant response to chat history and display it
+        st.session_state.chat_history.append({"role": "assistant", "content": response})
+        with st.chat_message("assistant"):
+            st.markdown(response)
