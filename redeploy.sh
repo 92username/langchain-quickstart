@@ -10,17 +10,22 @@
 # e que o repositório langchain-quickstart está clonado na pasta ~/langchain-quickstart
 set -e
 
-echo "Atualizando repositório..."
+echo "🔄 Atualizando repositório..."
 cd ~/langchain-quickstart
 git pull origin main
 
-echo "Parando container atual..."
+echo "🧠 Executando pipeline RAG..."
+python index_docs.py
+python loader.py
+python retriever.py
+
+echo "🧼 Parando container atual..."
 docker compose down
 
-echo "Rebuildando imagem do zero..."
+echo "🔧 Rebuild da imagem (no cache)..."
 docker compose build --no-cache
 
-echo "Subindo container atualizado..."
+echo "🚀 Subindo container atualizado..."
 docker compose up -d
 
-echo "Deploy completo."
+echo "✅ Deploy concluído com sucesso."
