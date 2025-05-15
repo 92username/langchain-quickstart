@@ -24,7 +24,8 @@ if modal_open:
         👋 Olá! Antes de começar a conversar com a nossa IA, leia com atenção:
 
         - Esta ferramenta é voltada para estudantes da **Estácio**
-        - O foco da IA é **a startup Estudamais.tech, Github, GitHub Student Pack e temas relacionados**
+        - O foco da IA é **a startup Estudamais.tech, Github, GitHub Student Pack
+          e temas relacionados**
         - **Não envie dados sensíveis**, como: nome completo, número de documentos ou senhas
         - As perguntas podem ser registradas para fins de melhoria contínua da plataforma
 
