@@ -37,6 +37,6 @@ jobs:
           script: |
             cd ~/langchain-quickstart
             git pull origin main
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/langchain-quickstart:latest
-            docker compose down
-            docker compose up -d
+            chmod +x redeploy.sh
+            ./redeploy.sh
+
