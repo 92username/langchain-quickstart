@@ -1,13 +1,26 @@
-import streamlit as st
-from streamlit_modal import Modal
-from langchain_openai import ChatOpenAI  # fake commit to triger a new build
+#!/usr/bin/env python3
+"""
+Estudamais.tech Chatbot Interface.
+
+This Streamlit application provides an interactive chatbot for students,
+focusing on information about Estudamais.tech, GitHub, GitHub Student Pack,
+and related educational topics.
+"""
+
 import os
-from dotenv import load_dotenv
 import csv
 from datetime import datetime
-from loader import load_docs
 
-# Carregar variáveis do arquivo .env
+import streamlit as st
+from streamlit_modal import Modal
+from langchain_openai import ChatOpenAI
+from langchain.chains import RetrievalQA
+from dotenv import load_dotenv
+
+# Import the retriever function instead of the loader
+from retriever import load_docs
+
+# Load environment variables
 load_dotenv()
 
 # Configuração da página
@@ -109,33 +122,73 @@ Nunca invente dados numéricos.
 
 
 def generate_response(input_text):
-    # Carregar o contexto dos documentos
-    context = load_docs()
-
-    # Construir mensagens com sistema + contexto e input do usuário
-    messages = [
-        {"role": "system", "content": system_message + "\n\n" + context},
-        {"role": "user", "content": input_text},
-    ]
-
-    # Criar instância do modelo
-    llm = ChatOpenAI(
-        model_name="gpt-4.1-nano",  # ou "gpt-4o"
-        temperature=0.5,
-        api_key=openai_api_key,
-    )
-
-    # Invocar o modelo
-    response = llm.invoke(messages)
-    response_content = response.content
-
-    # Registrar a conversa no log
-    with open(csv_file, mode="a", encoding="utf-8", newline="") as f:
-        writer = csv.writer(f)
-        writer.writerow([datetime.now(), input_text, response_content])
-
-    # Exibir resposta
-    st.info(response_content)
+    """
+    Generate a response using RAG (Retrieval-Augmented Generation) based on user input.
+    
+    This function:
+    1. Retrieves relevant document chunks from ChromaDB based on the query
+    2. Uses these documents as context for the LLM
+    3. Displays both the response and source documents used
+    
+    Args:
+        input_text (str): The user's query text
+    """
+    # Check for API key
+    if not openai_api_key:
+        st.error("OpenAI API key is required!")
+        return
+        
+    # Get relevant documents from ChromaDB using the retriever
+    try:
+        retrieved_docs = load_docs(input_text, k=5)
+        
+        if not retrieved_docs:
+            st.warning("No relevant documents found in the knowledge base.")
+            context = "No specific context available."
+        else:
+            # Create a concatenated context from the retrieved documents
+            context = "\n\n".join([doc.page_content for doc in retrieved_docs])
+            
+        # Initialize the LLM
+        llm = ChatOpenAI(
+            model_name="gpt-4.1-nano",  # or "gpt-4o"
+            temperature=0.5,
+            api_key=openai_api_key,
+        )
+            
+        # Create messages with system context and user input
+        messages = [
+            {"role": "system", "content": system_message + "\n\n" + context},
+            {"role": "user", "content": input_text},
+        ]
+        
+        # Generate response
+        response = llm.invoke(messages)
+        response_content = response.content
+        
+        # Display the response
+        st.info(response_content)
+        
+        # Show sources in an expander if we have retrieved documents
+        if retrieved_docs:
+            with st.expander("📚 Fontes utilizadas"):
+                for i, doc in enumerate(retrieved_docs):
+                    st.markdown(f"**Fonte {i+1}:**")
+                    st.markdown(f"```\n{doc.page_content}\n```")
+                    if hasattr(doc, 'metadata') and doc.metadata:
+                        source = doc.metadata.get('source', 'Desconhecida')
+                        st.caption(f"Fonte: {source}")
+                    st.markdown("---")
+        
+        # Log the conversation
+        with open(csv_file, mode="a", encoding="utf-8", newline="") as log_file:
+            log_writer = csv.writer(log_file)
+            log_writer.writerow([datetime.now(), input_text, response_content])
+            
+    except Exception as e:
+        st.error(f"Erro ao gerar resposta: {str(e)}")
+        import traceback
+        st.error(traceback.format_exc())
 
 
 with st.form("my_form"):
