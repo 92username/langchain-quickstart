@@ -1,6 +1,0 @@
-- [GitHub Blog Oficial](https://github.blog/news-insights/try-something-new-at-local-hack-day-learn/)
-- [Dev Hunt](https://devhunt.org/blog/github-student-tools-for-new-developers)
-- [Medium - Learn and Grow](https://medium.com/learn-and-grow/how-to-avail-github-student-developer-pack-worth-200k-ac683027fcbe)
-- [Medium - College Experience](https://medium.com/@ferdinandtaslim/maximizing-your-college-experience-as-a-computer-science-student-ffeb09c6f8c8)
-- [LinkedIn Guide](https://www.linkedin.com/pulse/ultimate-guide-github-student-developer-pack-what-you-dickinson-pq5je)
-- [Vídeo Oficial GitHub](https://youtu.be/HIVFdN9VGgw?si=FcPKL2rHQ2SlSwZN)
