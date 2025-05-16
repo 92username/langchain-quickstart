@@ -14,9 +14,31 @@ echo "🔄 Atualizando repositório..."
 cd ~/langchain-quickstart
 git pull origin main
 
+# Verificar e instalar python3-venv se necessário
+echo "🔍 Verificando requisitos do sistema..."
+PYTHON_VERSION=$(python3 --version | cut -d' ' -f2 | cut -d'.' -f1,2)
+VENV_PACKAGE="python3-venv"
+
+if ! dpkg -l | grep -q "$VENV_PACKAGE"; then
+  echo "📦 Instalando $VENV_PACKAGE (necessário para ambientes virtuais)..."
+  sudo apt update
+  sudo apt install -y $VENV_PACKAGE
+fi
+
+# Se estamos usando Python 3.12 especificamente, instale o pacote específico
+if python3 --version | grep -q "3.12"; then
+  if ! dpkg -l | grep -q "python3.12-venv"; then
+    echo "📦 Instalando python3.12-venv..."
+    sudo apt update
+    sudo apt install -y python3.12-venv
+  fi
+fi
+
 # Configurar ambiente virtual
 echo "🛠️ Configurando ambiente virtual..."
 if [ ! -d ".venv" ]; then
+  # Remover qualquer .venv parcial ou corrompido
+  rm -rf .venv
   python3 -m venv .venv
 fi
 source .venv/bin/activate
