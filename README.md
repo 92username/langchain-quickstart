@@ -1,5 +1,6 @@
 [![CI - Code Quality and Security](https://github.com/92username/langchain-quickstart/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/92username/langchain-quickstart/actions/workflows/ci.yml)
 [![CD - Deploy VPS](https://github.com/92username/langchain-quickstart/actions/workflows/deploy.yml/badge.svg?branch=main)](https://github.com/92username/langchain-quickstart/actions/workflows/deploy.yml)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/d765b1d13b02475097a2dc081cebab54)](https://app.codacy.com/gh/92username/langchain-quickstart/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 ![Docker Image Size](https://img.shields.io/docker/image-size/user92/langchain-quickstart/latest)
 ![Docker Pulls](https://img.shields.io/docker/pulls/user92/langchain-quickstart)
