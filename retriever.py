@@ -28,8 +28,9 @@ except ImportError:
     error_msg = "Required packages not installed. Please run: pip install langchain-openai langchain-community"
     try:
         error(error_msg)
-    except:
-        pass  # If logger isn't available yet
+    except (NameError, AttributeError) as e:
+        # Exceções específicas para quando error() não está definido ou não é uma função
+        print(f"Logging unavailable: {error_msg}")
     raise ImportError(error_msg)
 
 # Load environment variables (including OPENAI_API_KEY)
