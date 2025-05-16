@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # redeploy manual script para atualizar o container do langchain-quickstart
 # Este script deve ser executado na pasta ~/langchain-quickstart
@@ -13,6 +13,18 @@ set -e
 echo "🔄 Atualizando repositório..."
 cd ~/langchain-quickstart
 git pull origin main
+
+# Configurar ambiente virtual
+echo "🛠️ Configurando ambiente virtual..."
+if [ ! -d ".venv" ]; then
+  python3 -m venv .venv
+fi
+source .venv/bin/activate
+
+# Instalar/atualizar dependências
+echo "📦 Instalando dependências..."
+pip install --upgrade pip
+pip install --no-cache-dir -r requirements.txt
 
 echo "🧠 Executando pipeline RAG..."
 python3 index_docs.py
