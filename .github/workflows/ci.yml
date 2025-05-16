@@ -32,10 +32,10 @@ jobs:
         run: black .
 
       - name: Run Pylint
-        run: pylint --disable=C0111,C0103 **/*.py || true
+        run: find . -name "*.py" -not -path "./venv/*" | xargs pylint --disable=C0111,C0103 || true
 
       - name: Run MyPy
-        run: mypy --ignore-missing-imports **/*.py || true
+        run: find . -name "*.py" -not -path "./venv/*" | xargs mypy --ignore-missing-imports || true
 
       - name: Run Ruff Format
         run: ruff -v format
