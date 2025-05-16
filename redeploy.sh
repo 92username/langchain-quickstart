@@ -34,13 +34,47 @@ if python3 --version | grep -q "3.12"; then
   fi
 fi
 
-# Configurar ambiente virtual
+# Configurar ambiente virtual com verificação de erro
 echo "🛠️ Configurando ambiente virtual..."
-if [ ! -d ".venv" ]; then
-  # Remover qualquer .venv parcial ou corrompido
-  rm -rf .venv
-  python3 -m venv .venv
+# Remover qualquer .venv parcial ou corrompido
+rm -rf .venv
+
+# Criar o ambiente virtual com verificação de erro
+echo "🔧 Criando ambiente virtual Python..."
+python3 -m venv .venv || {
+  echo "❌ Falha ao criar ambiente virtual. Tentando com método alternativo..."
+  
+  # Verificar qual versão do Python está disponível
+  PYTHON_VERSION=$(python3 --version)
+  echo "📊 Versão do Python: $PYTHON_VERSION"
+  
+  # Tentar uma abordagem alternativa para Python 3.12
+  if python3 --version | grep -q "3.12"; then
+    echo "🔄 Tentando criar ambiente com python3.12 explicitamente..."
+    python3.12 -m venv .venv || {
+      echo "❌ Falha novamente. Instalando pacotes adicionais..."
+      sudo apt update
+      sudo apt install -y python3.12-dev python3.12-distutils python3.12-venv
+      python3.12 -m venv .venv
+    }
+  else
+    # Abordagem genérica
+    echo "🔄 Tentando alternativa com virtualenv..."
+    sudo apt update
+    sudo apt install -y python3-virtualenv
+    virtualenv -p python3 .venv
+  fi
+}
+
+# Verificar se o ambiente foi criado
+if [ ! -f ".venv/bin/activate" ]; then
+  echo "❌ Falha ao criar ambiente virtual. O arquivo .venv/bin/activate não existe."
+  echo "Por favor, verifique os requisitos do sistema e tente novamente."
+  exit 1
 fi
+
+# Ativar o ambiente virtual
+echo "✅ Ambiente virtual criado com sucesso, ativando..."
 source .venv/bin/activate
 
 # Instalar/atualizar dependências
