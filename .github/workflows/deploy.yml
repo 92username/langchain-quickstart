@@ -36,8 +36,13 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd ~/langchain-quickstart
-            git pull origin main
-            ls -la
+            # 1) Buscar todas as refs e garantir branch correta
+            git fetch --all --prune
+            git checkout main
+
+            # 2) Forçar sincronização exata com o remoto
+            git reset --hard origin/main
+
+            # 3) Executar o redeploy
             chmod +x redeploy.sh
             ./redeploy.sh
-
