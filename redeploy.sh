@@ -15,9 +15,9 @@ cd ~/langchain-quickstart
 git pull origin main
 
 echo "🧠 Executando pipeline RAG..."
-python index_docs.py
-python loader.py
-python retriever.py
+python3 index_docs.py
+python3 loader.py
+python3 retriever.py
 
 echo "🧼 Parando container atual..."
 docker compose down
