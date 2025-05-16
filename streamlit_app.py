@@ -7,7 +7,7 @@ focusing on information about Estudamais.tech, GitHub, GitHub Student Pack,
 and related educational topics.
 """
 
-import os #fakecommit
+import os
 import csv
 from datetime import datetime
 

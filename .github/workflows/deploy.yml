@@ -37,6 +37,7 @@ jobs:
           script: |
             cd ~/langchain-quickstart
             git pull origin main
+            ls -la
             chmod +x redeploy.sh
             ./redeploy.sh
 
