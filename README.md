@@ -116,6 +116,7 @@ The production environment runs on a VPS (Hostinger) and is accessible via:
 * [x] RAG with LangChain + OpenAI
 * [x] Automated deployment with GitHub Actions
 * [x] Persistent interaction logging
+* [ ] Implement caching for frequently asked questions and repeated answers.
 * [ ] Auto-generated FAQ module
 * [ ] Admin dashboard with usage metrics
 
